@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, hasDa
               <Shield className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Insurance Survey Generator</h1>
+              <h1 className="text-2xl font-bold text-gray-900"> PAPA Insurance Survey Generator</h1>
               <p className="text-sm text-gray-600">Professional Vehicle Assessment Reports</p>
             </div>
           </motion.div>
