@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { Save, Calculator, Plus, Trash2, FileText } from 'lucide-react';
+import { Save, Calculator, Plus, Trash2, FileText, Eye } from 'lucide-react';
 import { SurveyData, DamagedPart } from '../types/survey';
 import { FormSection } from './FormSection';
 import { DamagedPartsTable } from './DamagedPartsTable';
+import { DEFAULT_SURVEYOR_DETAILS } from '../config/surveyorConfig';
 
 interface SurveyFormProps {
   onSubmit: (data: SurveyData) => void;
@@ -13,15 +14,9 @@ interface SurveyFormProps {
 }
 
 export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initialData }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<SurveyData>({
+  const { register, handleSubmit, watch, setValue, getValues, formState: { errors } } = useForm<SurveyData>({
     defaultValues: initialData || {
-      surveyorDetails: {
-        name: '',
-        licenseNo: '',
-        phone: '',
-        email: '',
-        address: '',
-      },
+      surveyorDetails: DEFAULT_SURVEYOR_DETAILS,
       insuredDetails: {
         name: '',
         address: '',
@@ -165,12 +160,21 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
       case 0:
         return (
           <FormSection title="Surveyor Details">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-2 mb-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">Pre-filled Surveyor Information</span>
+              </div>
+              <p className="text-sm text-blue-700">
+                The surveyor details below are pre-filled. You can modify them if needed.
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Surveyor Name *</label>
                 <input
                   {...register('surveyorDetails.name', { required: 'Surveyor name is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50"
                   placeholder="Enter surveyor name"
                 />
                 {errors.surveyorDetails?.name && (
@@ -181,7 +185,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <label className="block text-sm font-medium text-gray-700 mb-2">License Number *</label>
                 <input
                   {...register('surveyorDetails.licenseNo', { required: 'License number is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50"
                   placeholder="Enter license number"
                 />
                 {errors.surveyorDetails?.licenseNo && (
@@ -192,7 +196,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                 <input
                   {...register('surveyorDetails.phone', { required: 'Phone number is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50"
                   placeholder="Enter phone number"
                 />
                 {errors.surveyorDetails?.phone && (
@@ -204,7 +208,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <input
                   type="email"
                   {...register('surveyorDetails.email', { required: 'Email is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50"
                   placeholder="Enter email address"
                 />
                 {errors.surveyorDetails?.email && (
@@ -216,7 +220,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <textarea
                   {...register('surveyorDetails.address', { required: 'Address is required' })}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50"
                   placeholder="Enter complete address"
                 />
                 {errors.surveyorDetails?.address && (
@@ -342,7 +346,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <input
                   {...register('vehicleDetails.model', { required: 'Vehicle model is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., Swift VDI"
+                  placeholder="e.g., Swift"
                 />
                 {errors.vehicleDetails?.model && (
                   <p className="text-red-500 text-sm mt-1">{errors.vehicleDetails.model.message}</p>
@@ -397,7 +401,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <input
                   {...register('insuranceDetails.companyName', { required: 'Insurance company name is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., ICICI Lombard"
+                  placeholder="Enter insurance company name"
                 />
                 {errors.insuranceDetails?.companyName && (
                   <p className="text-red-500 text-sm mt-1">{errors.insuranceDetails.companyName.message}</p>
@@ -419,7 +423,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <input
                   {...register('insuranceDetails.policyPeriod', { required: 'Policy period is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., 01/04/2023 to 31/03/2024"
+                  placeholder="e.g., 01/01/2024 to 31/12/2024"
                 />
                 {errors.insuranceDetails?.policyPeriod && (
                   <p className="text-red-500 text-sm mt-1">{errors.insuranceDetails.policyPeriod.message}</p>
@@ -435,28 +439,22 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">IDV (Insured Declared Value) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">IDV (Insured Declared Value)</label>
                 <input
                   type="number"
-                  {...register('insuranceDetails.idv', { required: 'IDV is required' })}
+                  {...register('insuranceDetails.idv')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter IDV amount"
                 />
-                {errors.insuranceDetails?.idv && (
-                  <p className="text-red-500 text-sm mt-1">{errors.insuranceDetails.idv.message}</p>
-                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Compulsory Deductible *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Deductible Amount</label>
                 <input
                   type="number"
-                  {...register('insuranceDetails.deductible', { required: 'Deductible amount is required' })}
+                  {...register('insuranceDetails.deductible')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter deductible amount"
                 />
-                {errors.insuranceDetails?.deductible && (
-                  <p className="text-red-500 text-sm mt-1">{errors.insuranceDetails.deductible.message}</p>
-                )}
               </div>
             </div>
           </FormSection>
@@ -465,7 +463,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
       case 4:
         return (
           <FormSection title="Driver Details">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Driver Name *</label>
                 <input
@@ -516,16 +514,13 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Age *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Age</label>
                 <input
                   type="number"
-                  {...register('driverDetails.age', { required: 'Driver age is required' })}
+                  {...register('driverDetails.age')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter age"
                 />
-                {errors.driverDetails?.age && (
-                  <p className="text-red-500 text-sm mt-1">{errors.driverDetails.age.message}</p>
-                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Driving Experience (Years)</label>
@@ -545,7 +540,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
           <FormSection title="Accident Details">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date of Accident *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Accident Date *</label>
                 <input
                   type="date"
                   {...register('accidentDetails.date', { required: 'Accident date is required' })}
@@ -556,20 +551,18 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Time of Accident *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Accident Time</label>
                 <input
                   type="time"
-                  {...register('accidentDetails.time', { required: 'Accident time is required' })}
+                  {...register('accidentDetails.time')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                {errors.accidentDetails?.time && (
-                  <p className="text-red-500 text-sm mt-1">{errors.accidentDetails.time.message}</p>
-                )}
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Place of Accident *</label>
-                <input
-                  {...register('accidentDetails.place', { required: 'Accident place is required' })}
+                <textarea
+                  {...register('accidentDetails.place', { required: 'Place of accident is required' })}
+                  rows={2}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter detailed location of accident"
                 />
@@ -602,7 +595,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                 <input
                   {...register('accidentDetails.firNo')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter FIR number if applicable"
+                  placeholder="Enter FIR number"
                 />
               </div>
               <div>
@@ -611,7 +604,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                   {...register('accidentDetails.weatherConditions')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">Select weather conditions</option>
+                  <option value="">Select weather condition</option>
                   <option value="Clear">Clear</option>
                   <option value="Rainy">Rainy</option>
                   <option value="Foggy">Foggy</option>
@@ -625,12 +618,13 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
                   {...register('accidentDetails.roadConditions')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">Select road conditions</option>
+                  <option value="">Select road condition</option>
                   <option value="Good">Good</option>
                   <option value="Fair">Fair</option>
                   <option value="Poor">Poor</option>
                   <option value="Under Construction">Under Construction</option>
                   <option value="Wet">Wet</option>
+                  <option value="Icy">Icy</option>
                 </select>
               </div>
             </div>
@@ -642,17 +636,15 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
           <FormSection title="Damage Assessment">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">Damaged Parts</h3>
-                <motion.button
+                <h3 className="text-lg font-medium text-gray-900">Damaged Parts</h3>
+                <button
                   type="button"
                   onClick={addDamagedPart}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Part</span>
-                </motion.button>
+                </button>
               </div>
               
               <DamagedPartsTable
@@ -665,51 +657,55 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
         );
 
       case 7:
-        const financialData = watch('financialAssessment');
         return (
-          <FormSection title="Financial Summary">
+          <FormSection title="Financial Summary & Additional Information">
             <div className="space-y-6">
+              {/* Financial Summary Display */}
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost Breakdown</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                  <Calculator className="w-5 h-5 mr-2" />
+                  Financial Assessment
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Parts Cost:</span>
-                      <span className="font-semibold">₹{financialData?.totalPartsCost?.toLocaleString() || '0'}</span>
+                      <span className="font-medium">₹{watch('financialAssessment.totalPartsCost')?.toLocaleString() || '0'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Labor Cost:</span>
-                      <span className="font-semibold">₹{financialData?.totalLaborCost?.toLocaleString() || '0'}</span>
+                      <span className="font-medium">₹{watch('financialAssessment.totalLaborCost')?.toLocaleString() || '0'}</span>
                     </div>
                     <div className="flex justify-between border-t pt-2">
                       <span className="text-gray-900 font-medium">Total Assessed Cost:</span>
-                      <span className="font-bold text-lg">₹{financialData?.totalAssessedCost?.toLocaleString() || '0'}</span>
+                      <span className="font-bold">₹{watch('financialAssessment.totalAssessedCost')?.toLocaleString() || '0'}</span>
                     </div>
                   </div>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Compulsory Deductible:</span>
-                      <span className="font-semibold text-red-600">-₹{financialData?.compulsoryDeductible?.toLocaleString() || '0'}</span>
+                      <span className="text-gray-600">Less: Compulsory Deductible:</span>
+                      <span className="font-medium text-red-600">₹{watch('financialAssessment.compulsoryDeductible')?.toLocaleString() || '0'}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Salvage Value:</span>
-                      <span className="font-semibold text-red-600">-₹{financialData?.salvageValue?.toLocaleString() || '0'}</span>
+                      <span className="text-gray-600">Less: Salvage Value:</span>
+                      <span className="font-medium text-red-600">₹{watch('financialAssessment.salvageValue')?.toLocaleString() || '0'}</span>
                     </div>
-                    <div className="flex justify-between border-t pt-2">
-                      <span className="text-gray-900 font-medium">Net Liability:</span>
-                      <span className="font-bold text-lg text-green-600">₹{financialData?.netLiability?.toLocaleString() || '0'}</span>
+                    <div className="flex justify-between border-t pt-2 bg-green-50 px-3 py-2 rounded">
+                      <span className="text-green-800 font-bold">NET LIABILITY:</span>
+                      <span className="font-bold text-green-800 text-lg">₹{watch('financialAssessment.netLiability')?.toLocaleString() || '0'}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
+              {/* Additional Remarks */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Additional Remarks</label>
                 <textarea
                   {...register('additionalRemarks')}
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter any additional remarks or observations"
+                  placeholder="Enter any additional observations, recommendations, or remarks about the survey..."
                 />
               </div>
             </div>
@@ -723,92 +719,111 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({ onSubmit, onSave, initia
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">Survey Report Form</h2>
-          <div className="text-sm text-gray-600">
-            Step {currentSection + 1} of {sections.length}
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
+        {/* Progress Bar */}
+        <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Survey Report Form</h2>
+            <span className="text-sm text-gray-500">
+              Step {currentSection + 1} of {sections.length}
+            </span>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div 
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
+            />
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {sections.map((section, index) => (
+              <button
+                key={section}
+                type="button"
+                onClick={() => setCurrentSection(index)}
+                className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                  index === currentSection
+                    ? 'bg-blue-600 text-white'
+                    : index < currentSection
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {section}
+              </button>
+            ))}
           </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <motion.div
-            className="bg-blue-600 h-2 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <div className="flex justify-between mt-2">
-          {sections.map((section, index) => (
-            <button
-              key={section}
-              onClick={() => setCurrentSection(index)}
-              className={`text-xs px-2 py-1 rounded transition-colors ${
-                index === currentSection
-                  ? 'bg-blue-600 text-white'
-                  : index < currentSection
-                  ? 'bg-green-100 text-green-800'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {section}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
-        {renderCurrentSection()}
+        {/* Form Content */}
+        <motion.div
+          key={currentSection}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white rounded-lg shadow-lg border border-gray-200 p-6"
+        >
+          {renderCurrentSection()}
+        </motion.div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-          <div className="flex space-x-4">
-            {currentSection > 0 && (
-              <motion.button
-                type="button"
-                onClick={prevSection}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Previous
-              </motion.button>
-            )}
-            <motion.button
+        <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between">
+            <button
               type="button"
-              onClick={handleSaveForm}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-2 px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              onClick={prevSection}
+              disabled={currentSection === 0}
+              className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                currentSection === 0
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gray-600 text-white hover:bg-gray-700'
+              }`}
             >
-              <Save className="w-4 h-4" />
-              <span>Save Draft</span>
-            </motion.button>
-          </div>
+              Previous
+            </button>
 
-          <div className="flex space-x-4">
-            {currentSection < sections.length - 1 ? (
-              <motion.button
+            <div className="flex items-center space-x-4">
+              <button
                 type="button"
-                onClick={nextSection}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Next
-              </motion.button>
-            ) : (
-              <motion.button
-                type="submit"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                onClick={handleSaveForm}
                 className="flex items-center space-x-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
+                <Save className="w-4 h-4" />
+                <span>Save Draft</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const currentData = watch();
+                  onSubmit(currentData);
+                }}
+                className="flex items-center space-x-2 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
                 <FileText className="w-4 h-4" />
-                <span>Generate Report</span>
-              </motion.button>
-            )}
+                <span>Preview Report</span>
+              </button>
+
+              {currentSection === sections.length - 1 ? (
+                <button
+                  type="submit"
+                  className="flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Generate Report</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={nextSection}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Next
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </form>
